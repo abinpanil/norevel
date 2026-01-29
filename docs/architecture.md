@@ -105,6 +105,139 @@ Modules allow large applications to remain structured and scalable.
 
 ---
 
+## Application Lifecycle (Authoritative)
+
+This section defines the **authoritative lifecycle contract** for a NorevelJS application.
+All runtime adapters (HTTP, queue, scheduler) MUST follow this lifecycle.
+
+No runtime is allowed to bypass or reorder these phases.
+
+---
+
+### What Is an Application?
+
+An application in NorevelJS represents a fully initialized runtime environment.
+
+It is responsible for:
+- Loading configuration
+- Creating and owning the service container
+- Registering modules
+- Managing lifecycle hooks
+- Coordinating execution and shutdown
+
+An application instance exists independently of how execution is triggered
+(HTTP request, job, scheduled task, or event).
+
+---
+
+### Lifecycle Phases
+
+The application lifecycle consists of the following ordered phases:
+
+1. **Initialize**
+2. **Load Configuration**
+3. **Register Modules**
+4. **Prepare Runtime**
+5. **Execute**
+6. **Shutdown**
+
+---
+
+#### 1. Initialize
+
+Purpose:
+- Create the application instance
+- Create the service container
+
+Allowed:
+- Container creation
+- Internal framework setup
+
+Forbidden:
+- Service resolution
+- Module logic execution
+- Side effects
+
+---
+
+#### 2. Load Configuration
+
+Purpose:
+- Load environment and configuration values
+
+Allowed:
+- Reading environment variables
+- Resolving static configuration
+
+Forbidden:
+- Registering services
+- Executing user logic
+
+---
+
+#### 3. Register Modules
+
+Purpose:
+- Register all application modules
+
+Allowed:
+- Service bindings
+- Route registration
+- Job and listener registration
+- Lifecycle hook registration
+
+Forbidden:
+- Executing business logic
+- Resolving services eagerly
+- Performing I/O
+
+---
+
+#### 4. Prepare Runtime
+
+Purpose:
+- Finalize application readiness
+
+Allowed:
+- Final container validation
+- Runtime-specific preparation
+
+Forbidden:
+- Registering new bindings
+- Structural changes
+
+---
+
+#### 5. Execute
+
+Purpose:
+- Handle execution triggered by a runtime adapter
+
+Allowed:
+- Resolving services
+- Executing controllers, jobs, tasks, listeners
+
+Notes:
+- Each execution runs inside the same application container
+- Execution may occur multiple times during the application lifetime
+
+---
+
+#### 6. Shutdown
+
+Purpose:
+- Graceful shutdown and cleanup
+
+Allowed:
+- Releasing resources
+- Shutdown hooks
+
+Forbidden:
+- New execution
+- New registrations
+
+---
+
 ## Runtime Adapters
 
 NorevelJS separates **what the application does** from **how it is triggered**.
@@ -144,18 +277,20 @@ Schedulers do not bypass the framework lifecycle.
 
 ---
 
-## Execution Lifecycle
+## Execution Model
 
-Every execution path in NorevelJS follows the same lifecycle:
+All execution in NorevelJS occurs **within the Execute phase** of the application lifecycle.
 
-1. Application boot
-2. Configuration load
-3. Module registration
-4. Dependency resolution
-5. Execution (request, job, task)
-6. Cleanup and shutdown hooks
+Execution may be triggered by:
+- HTTP requests
+- Background jobs
+- Scheduled tasks
+- Event listeners
 
-This ensures consistent behavior regardless of how code is triggered.
+All triggers:
+- Share the same application instance
+- Share the same service container
+- Obey the same lifecycle constraints
 
 ---
 
