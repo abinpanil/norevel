@@ -7,9 +7,12 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "clean": "rm -rf dist",
-    "lint": "echo \"lint placeholder\"",
-    "test": "echo \"test placeholder\""
+    "build": "pnpm run --recursive build",
+    "clean": "pnpm run --recursive clean",
+    "lint": "pnpm run --recursive lint",
+    "test": "pnpm run --recursive test"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }
