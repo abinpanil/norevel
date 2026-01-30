@@ -1,0 +1,15 @@
+{
+  "name": "norevel",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}
