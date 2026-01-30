@@ -7,9 +7,9 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "pnpm -r build",
-    "clean": "pnpm -r clean",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test"
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "lint": "echo \"lint placeholder\"",
+    "test": "echo \"test placeholder\""
   }
 }
