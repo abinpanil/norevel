@@ -8,3 +8,5 @@ export enum LifecyclePhase {
 }
 
 export type LifecycleHook = () => void | Promise<void>;
+
+export type KernelHookTiming = 'before' | 'after';
