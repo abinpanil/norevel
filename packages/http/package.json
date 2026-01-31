@@ -9,5 +9,8 @@
     "clean": "rm -rf dist",
     "lint": "echo \"lint placeholder\"",
     "test": "echo \"test placeholder\""
+  },
+  "dependencies": {
+    "@norevel/core": "workspace:*"
   }
 }
