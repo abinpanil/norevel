@@ -17,7 +17,14 @@ importers:
 
   packages/auth: {}
 
-  packages/cli: {}
+  packages/cli:
+    dependencies:
+      '@norevel/core':
+        specifier: workspace:*
+        version: link:../core
+      '@norevel/http':
+        specifier: workspace:*
+        version: link:../http
 
   packages/core: {}
 

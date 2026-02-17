@@ -2,7 +2,17 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "maxNodeModuleJsDepth": 1,
+    "baseUrl": ".",
+    "paths": {
+      "@norevel/http": ["../http"],
+      "@norevel/core": ["../core"]
+    }
   },
+  "references": [
+    { "path": "../http" },
+    { "path": "../core" }
+  ],
   "include": ["src"]
 }

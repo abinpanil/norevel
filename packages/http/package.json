@@ -10,6 +10,12 @@
     "lint": "echo \"lint placeholder\"",
     "test": "echo \"test placeholder\""
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "dependencies": {
     "@norevel/core": "workspace:*"
   }
