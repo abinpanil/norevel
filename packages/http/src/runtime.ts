@@ -1,6 +1,7 @@
 import { Kernel } from '@norevel/core';
 import { HttpContext } from './types';
 import { Router } from './router';
+import { ExecutionContext } from '@norevel/core';
 
 export class HttpRuntime {
   private readonly kernel: Kernel;
@@ -12,9 +13,14 @@ export class HttpRuntime {
   }
 
   async handle(context: HttpContext): Promise<void> {
-    await this.kernel.execute();
+    const executionContext: ExecutionContext<HttpContext> = {
+      type: 'http',
+      payload: context
+    };
 
-    const handler = this.router.match(context.request);
+    await this.kernel.execute(executionContext);
+
+  const handler = this.router.match(context.request);
 
     if (!handler) {
       context.response.statusCode = 404;
