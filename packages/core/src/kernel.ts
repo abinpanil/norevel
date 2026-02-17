@@ -1,5 +1,6 @@
 import { Application } from './application';
 import { LifecyclePhase, LifecycleHook } from './lifecycle';
+import { ExecutionContext } from './execution-context';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
 
@@ -9,8 +10,14 @@ export class Kernel {
   private readonly beforeHooks: KernelHookMap = new Map();
   private readonly afterHooks: KernelHookMap = new Map();
 
+  private currentContext: ExecutionContext | null = null;
+
   constructor(app?: Application) {
     this.app = app ?? new Application();
+  }
+
+  getContext(): ExecutionContext | null {
+    return this.currentContext;
   }
 
   getApplication(): Application {
@@ -52,17 +59,21 @@ export class Kernel {
     await this.runPhase(LifecyclePhase.PrepareRuntime);
   }
 
-  async execute(): Promise<void> {
+  async execute(context: ExecutionContext): Promise<void> {
+    this.currentContext = context;
+
     await this.runPhase(LifecyclePhase.Execute);
+
+    this.currentContext = null;
   }
 
   async shutdown(): Promise<void> {
     await this.runPhase(LifecyclePhase.Shutdown);
   }
 
-  async run(): Promise<void> {
+  async run(context: ExecutionContext): Promise<void> {
     await this.boot();
-    await this.execute();
+    await this.execute(context);
     await this.shutdown();
   }
 }
