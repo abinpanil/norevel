@@ -5,6 +5,9 @@ import { ScopeContainer } from './scope-container';
 import { Config } from './config/config';
 import { Environment } from './config/environment';
 import { ConfigLoader } from './config/config-loader';
+import { Connection } from '@norevel/orm';
+import { MockDriver } from '@norevel/orm';
+import { MigrationRunner, MigrationRepository } from '@norevel/orm';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
 
@@ -91,6 +94,32 @@ export class Kernel {
 
   // Freeze config to prevent runtime mutation
   Object.freeze(config);
+
+  // Register Connection (singleton)
+  container.register(Connection, {
+    lifetime: 'singleton',
+    factory: () => {
+      const driver = new MockDriver();
+      return new Connection(driver);
+    }
+  });
+
+  container.register(MigrationRepository, {
+    lifetime: 'singleton',
+    factory: resolver => {
+      const connection = resolver.resolve(Connection);
+      return new MigrationRepository(connection);
+    }
+  });
+
+  container.register(MigrationRunner, {
+    lifetime: 'singleton',
+    factory: resolver => {
+      const connection = resolver.resolve(Connection);
+      const repo = resolver.resolve(MigrationRepository);
+      return new MigrationRunner(connection, repo);
+    }
+  });
 
   await this.runPhase(LifecyclePhase.Boot);
 }

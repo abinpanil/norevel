@@ -35,8 +35,15 @@ importers:
       '@norevel/http':
         specifier: workspace:*
         version: link:../http
+      '@norevel/orm':
+        specifier: workspace:*
+        version: link:../orm
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      '@norevel/orm':
+        specifier: workspace:*
+        version: link:../orm
 
   packages/http:
     dependencies:
