@@ -27,4 +27,12 @@ export class ScopeContainer implements ServiceResolver {
 
     return this.scopedInstances.get(token) as T;
   }
+
+  bindInstance<T>(
+    token: symbol | string,
+    instance: T
+  ): void {
+    this.scopedInstances.set(token, instance);
+  }
+
 }
