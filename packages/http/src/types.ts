@@ -5,4 +5,9 @@ export interface HttpContext {
   response: ServerResponse;
 }
 
-export type RouteHandler = (context: HttpContext) => void | Promise<void>;
+export type RouteHandler =
+  | ((context: HttpContext) => any)
+  | {
+      controller: new (...args: any[]) => any;
+      action: string;
+    };
