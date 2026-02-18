@@ -7,5 +7,6 @@ export interface CliCommand {
   execute(options: {
     kernel: Kernel;
     args: string[];
+    watch?: boolean;
   }): Promise<void>;
 }

@@ -8,7 +8,10 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "lint": "echo \"lint placeholder\"",
-    "test": "echo \"test placeholder\""
+    "test": "echo \"test placeholder\"",
+    "dev": "tsx src/cli.ts",
+    "watch": "tsx watch src/cli.ts",
+    "serve:watch": "tsx watch src/cli.ts serve"
   },
   "bin": {
     "norevel": "dist/cli.js"
