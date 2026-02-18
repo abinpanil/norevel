@@ -2,6 +2,9 @@ import { Application } from './application';
 import { LifecyclePhase, LifecycleHook } from './lifecycle';
 import { EXECUTION_CONTEXT, ExecutionContext } from './execution-context';
 import { ScopeContainer } from './scope-container';
+import { Config } from './config/config';
+import { Environment } from './config/environment';
+import { ConfigLoader } from './config/config-loader';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
 
@@ -59,11 +62,39 @@ export class Kernel {
   }
 
   async boot(): Promise<void> {
-    await this.runPhase(LifecyclePhase.Initialize);
-    await this.runPhase(LifecyclePhase.LoadConfig);
-    await this.runPhase(LifecyclePhase.RegisterModules);
-    await this.runPhase(LifecyclePhase.PrepareRuntime);
-  }
+  const container = this.app.getContainer();
+
+  // Register Environment
+  container.register(Environment, {
+    lifetime: 'singleton',
+    implementation: Environment
+  });
+
+  // Register Config repository
+  container.register(Config, {
+    lifetime: 'singleton',
+    implementation: Config
+  });
+
+  // Register ConfigLoader
+  container.register(ConfigLoader, {
+    lifetime: 'singleton',
+    implementation: ConfigLoader
+  });
+
+  // Resolve and load config
+  const env = container.resolve(Environment);
+  const config = container.resolve(Config);
+  const loader = new ConfigLoader(env, config);
+
+  loader.load();
+
+  // Freeze config to prevent runtime mutation
+  Object.freeze(config);
+
+  await this.runPhase(LifecyclePhase.Boot);
+}
+
 
   async execute(context: ExecutionContext): Promise<void> {
     this.currentContext = context;
