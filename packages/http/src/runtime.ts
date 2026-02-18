@@ -20,7 +20,7 @@ export class HttpRuntime {
 
     await this.kernel.execute(executionContext);
 
-  const handler = this.router.match(context.request);
+    const handler = this.router.match(context.request);
 
     if (!handler) {
       context.response.statusCode = 404;
@@ -28,6 +28,30 @@ export class HttpRuntime {
       return;
     }
 
-    await handler(context);
+    if (typeof handler === 'function') {
+      await handler(context);
+      return;
+    }
+
+    const scope = this.kernel.getScope();
+    if (!scope) {
+      throw new Error('No execution scope available.');
+    }
+
+    const controllerInstance = scope.resolve(handler.controller);
+
+    if (controllerInstance.before) {
+      await controllerInstance.before();
+    }
+
+    const result = await controllerInstance[handler.action](context);
+
+    if (controllerInstance.after) {
+      await controllerInstance.after();
+    }
+
+    if (result !== undefined) {
+      context.response.end(String(result));
+    }
   }
 }

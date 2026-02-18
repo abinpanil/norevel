@@ -12,7 +12,11 @@ interface Route {
 export class Router {
   private routes: Route[] = [];
 
-  add(method: Method, path: string, handler: RouteHandler): void {
+  add(
+    method: Method,
+    path: string,
+    handler: RouteHandler
+  ): void {
     this.routes.push({ method, path, handler });
   }
 
