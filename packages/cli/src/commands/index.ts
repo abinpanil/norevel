@@ -1,10 +1,10 @@
 import { CommandRegistry } from '../registry';
 import { serveCommand } from './serve';
-import { helpCommand } from './help';
+import { createHelpCommand  } from './help';
 
 export function registerCommands(
   registry: CommandRegistry
 ): void {
   registry.register(serveCommand);
-  registry.register(helpCommand);
+  registry.register(createHelpCommand(registry));
 }

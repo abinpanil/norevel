@@ -10,6 +10,9 @@
     "lint": "echo \"lint placeholder\"",
     "test": "echo \"test placeholder\""
   },
+  "bin": {
+    "norevel": "dist/cli.js"
+  },
   "dependencies": {
     "@norevel/http": "workspace:*",
     "@norevel/core": "workspace:*"
