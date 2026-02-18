@@ -1,6 +1,6 @@
 import { Application } from './application';
 import { LifecyclePhase, LifecycleHook } from './lifecycle';
-import { ExecutionContext } from './execution-context';
+import { EXECUTION_CONTEXT, ExecutionContext } from './execution-context';
 import { ScopeContainer } from './scope-container';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
@@ -67,9 +67,10 @@ export class Kernel {
 
   async execute(context: ExecutionContext): Promise<void> {
     this.currentContext = context;
-
     const scope = this.app.getContainer().createScope();
     this.currentScope = scope;
+
+    scope.bindInstance(EXECUTION_CONTEXT, context);
 
     await this.runPhase(LifecyclePhase.Execute);
 
