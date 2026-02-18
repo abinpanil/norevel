@@ -10,7 +10,8 @@
     "build": "pnpm exec tsc -b",
     "clean": "pnpm exec tsc -b --clean",
     "lint": "echo \"lint placeholder\"",
-    "test": "echo \"test placeholder\""
+    "test": "echo \"test placeholder\"",
+    "norevel": "pnpm --filter @norevel/cli exec node dist/cli.js"
   },
   "devDependencies": {
     "@types/node": "^25.1.0",
