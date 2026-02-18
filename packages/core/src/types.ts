@@ -1,10 +1,19 @@
-export type ServiceLifetime = 'singleton' | 'scoped';
+export type ServiceLifetime =
+  | 'singleton'
+  | 'scoped'
+  | 'transient';
+
+export type ServiceToken<T = unknown> =
+  | symbol
+  | string
+  | (new (...args: any[]) => T);
 
 export interface ServiceDefinition<T = unknown> {
   lifetime: ServiceLifetime;
-  factory: (container: ServiceResolver) => T;
+  implementation?: new (...args: any[]) => T;
+  factory?: (resolver: ServiceResolver) => T;
 }
 
 export interface ServiceResolver {
-  resolve<T>(token: symbol | string): T;
+  resolve<T>(token: ServiceToken<T>): T;
 }
