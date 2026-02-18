@@ -1,14 +1,17 @@
-lockfileVersion: '9.0'
+lockfileVersion: "9.0"
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 importers:
-
   .:
+    dependencies:
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
     devDependencies:
-      '@types/node':
+      "@types/node":
         specifier: ^25.1.0
         version: 25.1.0
       tsx:
@@ -22,10 +25,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@norevel/core':
+      "@norevel/core":
         specifier: workspace:*
         version: link:../core
-      '@norevel/http':
+      "@norevel/http":
         specifier: workspace:*
         version: link:../http
 
@@ -33,7 +36,7 @@ importers:
 
   packages/http:
     dependencies:
-      '@norevel/core':
+      "@norevel/core":
         specifier: workspace:*
         version: link:../core
 
@@ -42,6 +45,19 @@ importers:
   packages/queue: {}
 
 packages:
+  "@types/node@25.1.0":
+    resolution:
+      {
+        integrity: sha512-t7frlewr6+cbx+9Ohpl0NOTKXZNV9xHRmNOvql47BFJKcEG1CxtxlPEEe+gR9uhVWM4DwhnvTF110mIL4yP9RA==,
+      }
+
+  esbuild@0.27.3:
+    resolution:
+      {
+        integrity: sha512-8VwMnyGCONIs6cWue2IdpHxHnAjzxnw2Zr7MkVxB2vjmQ2ivqGFb4LEG3SMnv0Gb2F/G/2yA8zUaiL1gywDCCg==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   '@esbuild/aix-ppc64@0.27.3':
     resolution: {integrity: sha512-9fJMTNFTWZMh5qwrBItuziu834eOCUcEqymSH7pY+zoMVEZg3gcPuBNxH1EvfVYe9h0x/Ptw8KBzv7qxb7l8dg==}
@@ -224,12 +240,18 @@ packages:
     hasBin: true
 
   typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
-    engines: {node: '>=14.17'}
+    resolution:
+      {
+        integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==,
+      }
+    engines: { node: ">=14.17" }
     hasBin: true
 
   undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+    resolution:
+      {
+        integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==,
+      }
 
 snapshots:
 
