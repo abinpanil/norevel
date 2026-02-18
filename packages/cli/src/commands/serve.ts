@@ -1,13 +1,11 @@
 import { CliCommand } from '../command';
-import { bootstrapKernel } from '../kernel';
 import { HttpServer, Router, type HttpContext } from '@norevel/http';
 
 export const serveCommand: CliCommand = {
   name: 'serve',
   description: 'Start the HTTP server',
 
-  async execute() {
-    const kernel = await bootstrapKernel();
+  async execute({ kernel }) {
     const router = new Router();
 
     router.add('GET', '/', ({ response }: HttpContext) => {

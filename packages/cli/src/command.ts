@@ -1,7 +1,12 @@
+import type { Kernel } from '@norevel/core';
 export interface CliCommand {
   name: string;
   description: string;
-  execute(): Promise<void>;
+
+  execute(options: {
+    kernel: Kernel;
+    args: string[];
+  }): Promise<void>;
 }
 
 import { serveCommand } from './commands/serve';
