@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import { CliCommand } from '../command';
 import { HttpServer, Router, type HttpContext } from '@norevel/http';
 
@@ -5,10 +6,28 @@ export const serveCommand: CliCommand = {
   name: 'serve',
   description: 'Start the HTTP server',
 
-  async execute({ kernel }) {
+  async execute({ kernel, watch }) {
+    if (watch) {
+      console.log('Starting in watch mode...');
+
+      const child = spawn(
+        'tsx',
+        ['watch', 'src/cli.ts', 'serve'],
+        {
+          stdio: 'inherit',
+          shell: true
+        }
+      );
+
+      child.on('close', code => {
+        process.exit(code ?? 0);
+      });
+
+      return;
+    }
+
     const router = new Router();
 
-    // Temporary demo route
     router.add('GET', '/', ({ response }: HttpContext) => {
       response.statusCode = 200;
       response.end('Norevel is running');

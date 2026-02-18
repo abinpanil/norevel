@@ -9,6 +9,8 @@ async function main() {
   const commandName = args[0];
   const commandArgs = args.slice(1);
 
+  const watchMode = commandArgs.includes('--watch');
+
   const registry = new CommandRegistry();
   registerCommands(registry);
 
@@ -25,7 +27,8 @@ async function main() {
 
   await command.execute({
     kernel,
-    args: commandArgs
+    args: commandArgs,
+    watch: watchMode
   });
 }
 
