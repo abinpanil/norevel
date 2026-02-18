@@ -4,7 +4,9 @@ export enum LifecyclePhase {
   RegisterModules = 'register_modules',
   PrepareRuntime = 'prepare_runtime',
   Execute = 'execute',
-  Shutdown = 'shutdown'
+  Shutdown = 'shutdown',
+  Boot = 'boot',
+  Register = 'register',
 }
 
 export type LifecycleHook = () => void | Promise<void>;
