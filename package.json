@@ -11,10 +11,14 @@
     "clean": "pnpm exec tsc -b --clean",
     "lint": "echo \"lint placeholder\"",
     "test": "echo \"test placeholder\"",
-    "norevel": "pnpm --filter @norevel/cli exec node dist/cli.js"
+    "norevel": "pnpm --filter @norevel/cli exec node dist/cli.js",
+    "dev": "tsx src/cli.ts",
+    "serve": "node packages/cli/dist/cli.js serve",
+    "serve:watch": "tsx watch packages/cli/src/cli.ts serve"
   },
   "devDependencies": {
     "@types/node": "^25.1.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
