@@ -8,9 +8,10 @@ export class MigrationRepository {
   async ensureTable(): Promise<void> {
     await this.connection.query(`
       CREATE TABLE IF NOT EXISTS ${this.table} (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        batch INTEGER NOT NULL
+        batch INTEGER NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     `);
   }

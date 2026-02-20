@@ -5,12 +5,15 @@ import { Migration } from './migration';
 import { MigrationRepository } from './migration-repository';
 
 export class MigrationRunner {
-  private migrationsPath = path.resolve(process.cwd(), 'migrations');
+  private migrationsPath: string;
 
   constructor(
     private connection: Connection,
-    private repository: MigrationRepository
-  ) {}
+    private repository: MigrationRepository,
+    migrationsPath?: string
+  ) {
+    this.migrationsPath = migrationsPath ?? path.resolve(process.cwd(), 'migrations');
+  }
 
   async migrate(): Promise<void> {
     await this.repository.ensureTable();
@@ -30,10 +33,14 @@ export class MigrationRunner {
     for (const file of pending) {
       console.log(`Running migration: ${file}`);
 
-      const migration = await this.loadMigration(file);
-      await migration.up(this.connection);
-
-      await this.repository.log(file, batch);
+      try {
+        const migration = await this.loadMigration(file);
+        await migration.up(this.connection);
+        await this.repository.log(file, batch);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Migration "${file}" failed: ${message}`);
+      }
     }
 
     console.log('Migrations completed.');
@@ -50,10 +57,14 @@ export class MigrationRunner {
     for (const file of migrations.reverse()) {
       console.log(`Rolling back: ${file}`);
 
-      const migration = await this.loadMigration(file);
-      await migration.down(this.connection);
-
-      await this.repository.delete(file);
+      try {
+        const migration = await this.loadMigration(file);
+        await migration.down(this.connection);
+        await this.repository.delete(file);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Rollback of "${file}" failed: ${message}`);
+      }
     }
 
     console.log('Rollback completed.');
@@ -74,7 +85,20 @@ export class MigrationRunner {
     const fullPath = path.join(this.migrationsPath, file);
     const module = await import(fullPath);
 
-    const MigrationClass = module.default;
-    return new MigrationClass();
+    // Support default export
+    if (module.default && typeof module.default === 'function') {
+      return new module.default();
+    }
+
+    // Fall back to the first exported class
+    for (const key of Object.keys(module)) {
+      if (typeof module[key] === 'function' && module[key].prototype) {
+        return new module[key]();
+      }
+    }
+
+    throw new Error(
+      `Migration file "${file}" does not export a valid Migration class.`
+    );
   }
 }
