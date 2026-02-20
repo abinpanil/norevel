@@ -11,4 +11,11 @@ export class Connection {
   ): Promise<T[]> {
     return this.driver.query<T>(sql, bindings);
   }
+
+  async exec(
+    sql: string,
+    bindings: any[] = []
+  ): Promise<void> {
+    await this.driver.query(sql, bindings);
+  }
 }

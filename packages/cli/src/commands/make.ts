@@ -28,6 +28,10 @@ export const makeCommand: CliCommand = {
         generateModule(name);
         break;
 
+      case 'migration':
+        generateMigration(name);
+        break;
+
       default:
         console.log(`Unknown make target: ${type}`);
     }
@@ -90,6 +94,45 @@ function generateModule(name: string) {
 
   fs.writeFileSync(filePath, template.trim());
   console.log(`Module created: ${filePath}`);
+}
+
+function generateMigration(name: string) {
+  const dir = path.resolve(process.cwd(), 'migrations');
+  ensureDir(dir);
+
+  const now = new Date();
+  const timestamp = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+    String(now.getHours()).padStart(2, '0'),
+    String(now.getMinutes()).padStart(2, '0'),
+    String(now.getSeconds()).padStart(2, '0'),
+  ].join('_');
+
+  const fileName = `${timestamp}_${name}.ts`;
+  const className = name
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+
+  const filePath = path.join(dir, fileName);
+
+  const template = `import { Migration, Connection } from '@norevel/orm';
+
+export default class ${className} extends Migration {
+  async up(connection: Connection): Promise<void> {
+    // Write your migration here
+  }
+
+  async down(connection: Connection): Promise<void> {
+    // Reverse the migration here
+  }
+}
+`;
+
+  fs.writeFileSync(filePath, template);
+  console.log(`Migration created: ${filePath}`);
 }
 
 // ------------------------------

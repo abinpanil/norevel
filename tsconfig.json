@@ -1,7 +1,10 @@
 {
   "files": [],
   "references": [
+    { "path": "packages/orm" },
+    { "path": "packages/http" },
     { "path": "packages/core" },
-    { "path": "packages/http" }
+    { "path": "packages/queue" },
+    { "path": "packages/cli" }
   ]
 }
