@@ -4,7 +4,14 @@
     "outDir": "dist",
     "rootDir": "src",
     "declaration": true,
-    "composite": true
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@norevel/orm": ["../orm/src"]
+    }
   },
+  "references": [
+    { "path": "../orm" }
+  ],
   "include": ["src"]
 }

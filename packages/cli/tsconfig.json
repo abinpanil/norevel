@@ -6,13 +6,15 @@
     "maxNodeModuleJsDepth": 1,
     "baseUrl": ".",
     "paths": {
-      "@norevel/http": ["../http"],
-      "@norevel/core": ["../core"]
+      "@norevel/http": ["../http/src"],
+      "@norevel/core": ["../core/src"],
+      "@norevel/orm": ["../orm/src"]
     }
   },
   "references": [
     { "path": "../http" },
-    { "path": "../core" }
+    { "path": "../core" },
+    { "path": "../orm" }
   ],
   "include": ["src"]
 }
