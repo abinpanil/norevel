@@ -8,6 +8,7 @@ import { ConfigLoader } from './config/config-loader';
 import { Connection } from '@norevel/orm';
 import { MockDriver } from '@norevel/orm';
 import { MigrationRunner, MigrationRepository } from '@norevel/orm';
+import { SeederRunner } from '@norevel/orm';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
 
@@ -118,6 +119,14 @@ export class Kernel {
       const connection = resolver.resolve(Connection);
       const repo = resolver.resolve(MigrationRepository);
       return new MigrationRunner(connection, repo);
+    }
+  });
+
+  container.register(SeederRunner, {
+    lifetime: 'singleton',
+    factory: resolver => {
+      const connection = resolver.resolve(Connection);
+      return new SeederRunner(connection);
     }
   });
 
