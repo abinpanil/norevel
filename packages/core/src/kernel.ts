@@ -9,8 +9,10 @@ import { Connection } from '@norevel/orm';
 import { MockDriver } from '@norevel/orm';
 import { MigrationRunner, MigrationRepository } from '@norevel/orm';
 import { SeederRunner } from '@norevel/orm';
-import { InMemoryQueueDriver } from './job/in-memory-driver';
+import { InMemoryQueueDriver as JobInMemoryQueueDriver } from './job/in-memory-driver';
+import { InMemoryQueueDriver as QueueInMemoryQueueDriver } from './queue/in-memory-driver';
 import { JobRunner } from './job';
+import { QueueManager } from './queue';
 
 type KernelHookMap = Map<LifecyclePhase, LifecycleHook[]>;
 
@@ -132,17 +134,28 @@ export class Kernel {
     }
   });
 
-  container.register(InMemoryQueueDriver, {
+  container.register(JobInMemoryQueueDriver, {
     lifetime: 'singleton',
-    implementation: InMemoryQueueDriver
+    implementation: JobInMemoryQueueDriver
   });
 
   container.register(JobRunner, {
     lifetime: 'singleton',
     factory: resolver => {
-      const driver = resolver.resolve(InMemoryQueueDriver);
+      const driver = resolver.resolve(JobInMemoryQueueDriver);
       return new JobRunner(this, driver);
     }
+  });
+
+  container.register(QueueInMemoryQueueDriver, {
+    lifetime: 'singleton',
+    implementation: QueueInMemoryQueueDriver
+  });
+
+  container.register(QueueManager, {
+    lifetime: 'singleton',
+    factory: resolver =>
+      new QueueManager(resolver.resolve(QueueInMemoryQueueDriver))
   });
 
   await this.runPhase(LifecyclePhase.Boot);
